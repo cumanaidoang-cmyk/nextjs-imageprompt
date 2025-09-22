@@ -328,8 +328,7 @@ export default function PromptFormPage() {
       style && `Style/Rendering: ${style}`,
     ].filter(Boolean) as string[];
 
-    const out = parts.join(' 
-');
+    const out = parts.join(' ');
     if (state.lang === 'id') {
       return out
         .replace('Character:', 'Karakter:')
