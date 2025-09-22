@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo, useState } from "react";
 
 // --- CLIENT PAGE (drop into app/story-prompt/page.tsx) --- // Fitur baru: Pilih karakter berdasarkan NAMA, tapi yang dipakai di prompt adalah DESKRIPSI detailnya. // Kamu bisa tambah karakter (name + description) langsung dari web. Data tersimpan di localStorage.
@@ -11,7 +10,12 @@ type CharacterEntry = { name: string; desc: string };
 
 type OptionsMap = Record<FieldKey, string[]>;
 
-type State = { catalog: CharacterEntry[]; // daftar karakter (name + desc) selectedCharacterName: string; // yang dipilih user (berdasarkan nama) options: OptionsMap; // opsi untuk field lain selected: Record<FieldKey, string>; lang: "en" | "id"; };
+// daftar karakter (name + desc)
+type State = { catalog: CharacterEntry[]; 
+// yang dipilih user (berdasarkan nama)
+selectedCharacterName: string; 
+options: OptionsMap; 
+// opsi untuk field lain selected: Record<FieldKey, string>; lang: "en" | "id"; };
 
 function loadSaved<T>(fallback: T): T { if (typeof window === "undefined") return fallback; try { const raw = localStorage.getItem(KEY); return raw ? { ...fallback, ...JSON.parse(raw) } : fallback; } catch { return fallback; } }
 
