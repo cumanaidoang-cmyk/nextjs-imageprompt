@@ -1,4 +1,4 @@
-use client;
+
 import React, { useEffect, useMemo, useState } from "react";
 
 // --- CLIENT PAGE (drop into app/story-prompt/page.tsx) --- // Fitur baru: Pilih karakter berdasarkan NAMA, tapi yang dipakai di prompt adalah DESKRIPSI detailnya. // Kamu bisa tambah karakter (name + description) langsung dari web. Data tersimpan di localStorage.
