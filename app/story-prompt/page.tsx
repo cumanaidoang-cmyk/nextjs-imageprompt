@@ -14,8 +14,9 @@ type OptionsMap = Record<FieldKey, string[]>;
 type State = { catalog: CharacterEntry[]; 
 // yang dipilih user (berdasarkan nama)
 selectedCharacterName: string; 
+// opsi untuk field lain 
 options: OptionsMap; 
-// opsi untuk field lain selected: Record<FieldKey, string>; lang: "en" | "id"; };
+selected: Record<FieldKey, string>; lang: "en" | "id"; };
 
 function loadSaved<T>(fallback: T): T { if (typeof window === "undefined") return fallback; try { const raw = localStorage.getItem(KEY); return raw ? { ...fallback, ...JSON.parse(raw) } : fallback; } catch { return fallback; } }
 
