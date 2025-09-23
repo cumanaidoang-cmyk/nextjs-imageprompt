@@ -1,13 +1,13 @@
 'use client';
 import React, { useEffect, useMemo, useState } from 'react';
 
-// Clean, production-ready page for app/story-prompt/page.tsx
-// Pick character by NAME, but prompt uses the character's detailed DESCRIPTION.
-// Options and catalog persist via localStorage.
+// story-prompt/page.tsx — v4 (adds RATIO field)
+// - Choose character by NAME, but prompt uses the detailed DESCRIPTION
+// - Add/edit characters & options; persisted via localStorage
 
-const KEY = 'prompt-form-v3';
+const KEY = 'prompt-form-v4';
 
-type FieldKey = 'action' | 'background' | 'camera' | 'ambience' | 'style';
+type FieldKey = 'action' | 'background' | 'camera' | 'ambience' | 'style' | 'ratio';
 
 type CharacterEntry = { name: string; desc: string };
 
@@ -90,6 +90,13 @@ const defaultOptions: OptionsMap = {
     '3D cartoon Pixar-inspired; soft plastic material; toy-like; bright colors; clean lines',
     'Photorealistic cinematic baby; natural skin pores; filmic lighting; detailed micro-texture',
     'Plush toy style; short velvet fur; soft fabric seams; toy photography setup',
+  ],
+  ratio: [
+    '9:16 (portrait)',
+    '16:9 (landscape)',
+    '1:1 (square)',
+    '4:5 (portrait)',
+    '3:4 (portrait)',
   ],
 };
 
@@ -286,6 +293,7 @@ export default function PromptFormPage() {
         camera: '',
         ambience: '',
         style: defaultOptions.style[0],
+        ratio: defaultOptions.ratio[0],
       },
       lang: 'en',
     })
@@ -317,7 +325,7 @@ export default function PromptFormPage() {
 
   const prompt = useMemo(() => {
     const characterDesc = state.catalog.find((c) => c.name === state.selectedCharacterName)?.desc || '';
-    const { action, background, camera, ambience, style } = state.selected;
+    const { action, background, camera, ambience, style, ratio } = state.selected;
 
     const parts = [
       characterDesc && `Character: ${characterDesc}`,
@@ -326,9 +334,10 @@ export default function PromptFormPage() {
       camera && `Camera: ${camera}`,
       ambience && `Ambience: ${ambience}`,
       style && `Style/Rendering: ${style}`,
+      ratio && `Ratio: ${ratio}`,
     ].filter(Boolean) as string[];
 
-    const out = parts.join(' \n');
+    const out = parts.join('\n');
     if (state.lang === 'id') {
       return out
         .replace('Character:', 'Karakter:')
@@ -336,7 +345,8 @@ export default function PromptFormPage() {
         .replace('Background:', 'Latar:')
         .replace('Camera:', 'Kamera:')
         .replace('Ambience:', 'Suasana:')
-        .replace('Style/Rendering:', 'Gaya/Rendering:');
+        .replace('Style/Rendering:', 'Gaya/Rendering:')
+        .replace('Ratio:', 'Rasio:');
     }
     return out;
   }, [state.catalog, state.selectedCharacterName, state.selected, state.lang]);
@@ -366,6 +376,7 @@ export default function PromptFormPage() {
         camera: '',
         ambience: '',
         style: s.options.style?.[0] || '',
+        ratio: s.options.ratio?.[0] || '',
       },
     }));
 
@@ -378,7 +389,7 @@ export default function PromptFormPage() {
           <select
             className="rounded-xl border border-gray-300 p-2 text-sm"
             value={state.lang}
-            onChange={(e) => setState((s) => ({ ...s, lang: e.target.value as 'en' | 'id' }))}
+            onChange={(e) => setState((s) => ({ ...s, lang: (e.target.value as 'en' | 'id') }))}
           >
             <option value="en">EN</option>
             <option value="id">ID</option>
@@ -429,6 +440,13 @@ export default function PromptFormPage() {
           value={state.selected.style}
           onChange={(v) => setSelected('style', v)}
           onAdd={(v) => addOption('style', v)}
+        />
+        <Field
+          label="Ratio"
+          options={state.options.ratio}
+          value={state.selected.ratio}
+          onChange={(v) => setSelected('ratio', v)}
+          onAdd={(v) => addOption('ratio', v)}
         />
       </div>
 
